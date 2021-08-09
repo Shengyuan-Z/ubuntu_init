@@ -1,5 +1,3 @@
-
-
 ## docker install
 # uninstall old version
 sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -24,3 +22,21 @@ echo \
 # Install Docker Engine
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo docker version
+
+echo '\nDocker version should be shown above.\n'
+
+# 1、添加源
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+# 2、安装并重启
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+# 3、测试
+sudo docker run --rm --gpus all nvidia/cuda:10.0-base nvidia-smi
+
+echo '\nNvidia-smi should be shown above.\n'
