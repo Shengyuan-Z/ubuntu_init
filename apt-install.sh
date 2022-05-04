@@ -36,6 +36,7 @@ make install
 
 cd ..
 rm -r build opencv
+rm opencv.zip
 
 
 # CUDA Toolkit

@@ -1,22 +1,38 @@
-# 1. Basic components
+# Basic components
 
-```bash
+## 1. Replacing apt resources with Tsinghua's
+```sudo bash apt-sources.sh```
 
-# 1. Replacing apt resources with Tsinghua's
-sudo bash apt-sources.sh
+## 2. Installing basic things (Maybe 30-min long. XD)
+```sudo bash apt-install.sh```
 
-# 2. Installing basic things (Maybe 30-min long. XD)
-sudo bash apt-install.sh
+## 3. Installing nvidia driver
+```sudo bash nvidia_driver.sh```
 
-# 3 . Installing docker and nvidia-docker
+
+**Rebooting** is needed after this step. 
+
+Afterwards, you can use `nvidia-smi` to display your driver informations.
+## 4. Installing cuda and cudnn
+You should download `cudnn-local-repo-ubuntu2004-8.4.0.27_1.0-1_amd64.deb` on [nvidia-cudnn](https://developer.nvidia.com/rdp/cudnn-download) and put it in this git directory first. Login may be needed. 
+
+Then
+
+```sudo bash cuda_cudnn.sh```
+
+You will see `Result = PASS` and `Test passed!` respectively for the sucesses of `cuda` and `cudnn`.
+
+
+BTW, the details is recorded on [my article](https://segmentfault.com/a/1190000041788291).
+
+## 5. Installing docker and nvidia-docker
 sudo bash docker_install.sh
 
-# 4. (optional) Installing softwares
+## 6. (optional) Installing softwares
 sudo bash software.sh
 
-```
 
-# 2. Adding docker container for others
+# Adding docker container for others
 
 ```bash
 sudo bash docker_deployment.sh
