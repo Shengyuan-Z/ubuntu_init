@@ -2,6 +2,38 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
+
+# Check if an NVIDIA driver is currently installed
+if nvidia-smi &> /dev/null; then
+    echo "An NVIDIA driver is currently installed:"
+    nvidia-smi --query-gpu=driver_version --format=csv,noheader
+    
+    while true; do
+        read -p "Do you want to uninstall the current driver? (y/n): " yn
+        case $yn in
+            [Yy]* ) 
+                echo "Uninstalling the current NVIDIA driver..."
+                sudo apt-get remove --purge nvidia*
+                sudo apt autoremove
+                echo "NVIDIA driver uninstalled successfully."
+                break
+                ;;
+            [Nn]* ) 
+                echo "Keeping the current driver. Exiting script."
+                exit
+                ;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+else
+    echo "No properly functioning NVIDIA driver found. The script will now attempt to uninstall potentially problematic drivers and install a new driver."
+    
+    echo "Uninstalling potentially problematic NVIDIA drivers..."
+    sudo apt-get remove --purge nvidia*
+    sudo apt autoremove
+    echo "Potentially problematic NVIDIA drivers uninstalled. Proceeding to driver installation."
+fi
+
 # List available GPGPU drivers
 if ! sudo ubuntu-drivers list --gpgpu; then
     echo "Failed to list available GPGPU drivers, exiting script" >&2
