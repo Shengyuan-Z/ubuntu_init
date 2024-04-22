@@ -24,6 +24,11 @@ sudo nvidia_driver_install.sh
 sudo sh nvidia_cuda_install.sh
 ```
 
+References:
+- [nvidia driver](https://www.nvidia.com/Download/index.aspx?lang=en-us)
+- [ubuntu nvidia driver install](https://ubuntu.com/server/docs/nvidia-drivers-installation)
+- [container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+
 # Basic tools
 ```bash
 sudo sh basic_tools_install.sh
