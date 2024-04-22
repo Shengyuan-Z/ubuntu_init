@@ -2,36 +2,34 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-# Add the NVIDIA Container Toolkit GPG key
-if ! curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg; then
-    echo "Failed to add the NVIDIA Container Toolkit GPG key, exiting script" >&2
-    exit 1
+# Download the CUDA keyring package
+if ! wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb; then
+   echo "Failed to download the CUDA keyring package, exiting script" >&2
+   exit 1
 fi
 
-# Add the NVIDIA Container Toolkit repository to the sources list
-if ! curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list; then
-    echo "Failed to add the NVIDIA Container Toolkit repository to the sources list, exiting script" >&2
-    exit 1
+# Install the CUDA keyring package
+if ! sudo dpkg -i cuda-keyring_1.1-1_all.deb; then
+   echo "Failed to install the CUDA keyring package, exiting script" >&2
+   exit 1
 fi
 
-# Uncomment the experimental line in the NVIDIA Container Toolkit sources list
-if ! sudo sed -i -e '/experimental/ s/^#//g' /etc/apt/sources.list.d/nvidia-container-toolkit.list; then
-    echo "Failed to uncomment the experimental line in the NVIDIA Container Toolkit sources list, exiting script" >&2
-    exit 1
+# Clean up the downloaded package file
+if ! rm cuda-keyring_1.1-1_all.deb; then
+   echo "Failed to remove the downloaded CUDA keyring package file, exiting script" >&2
+   exit 1
 fi
 
 # Update the package lists
 if ! sudo apt-get update; then
-    echo "Failed to update the package lists, exiting script" >&2
-    exit 1
+   echo "Failed to update the package lists, exiting script" >&2
+   exit 1
 fi
 
-# Install the NVIDIA Container Toolkit
-if ! sudo apt-get install -y nvidia-container-toolkit; then
-    echo "Failed to install the NVIDIA Container Toolkit, exiting script" >&2
-    exit 1
+# Install CUDA Toolkit 12.4
+if ! sudo apt-get -y install cuda-toolkit-12-4; then
+   echo "Failed to install CUDA Toolkit 12.4, exiting script" >&2
+   exit 1
 fi
 
-echo "NVIDIA Container Toolkit installation completed successfully"
+echo "CUDA Toolkit 12.4 installation completed successfully"
