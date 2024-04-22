@@ -15,6 +15,15 @@ Successfully updated package lists
 References
 - [Tsinghua mirror](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
 
+# Nvidia driver and cuda toolkit
+```bash
+# Nvidia driver
+sudo nvidia_driver_install.sh
+
+# Nvidia cuda toolkit
+sudo sh nvidia_cuda_install.sh
+```
+
 # Basic tools
 ```bash
 sudo sh basic_tools_install.sh
