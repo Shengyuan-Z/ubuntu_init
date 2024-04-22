@@ -1,42 +1,80 @@
-## docker install
-# uninstall old version
-sudo apt-get remove docker docker-engine docker.io containerd runc
+#!/bin/bash
 
-# Update the apt package index and install packages to allow apt to use a repository over HTTPS:
-sudo apt-get update
-sudo apt-get install -y\
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+set -e  # Exit immediately if a command exits with a non-zero status
 
-# Add Docker’s official GPG key
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+# Update package lists
+if sudo apt-get update; then
+    echo "Successfully updated package lists"
+else
+    echo "Failed to update package lists, exiting script" >&2
+    exit 1
+fi
 
-# Use the following command to set up the stable repository.
-echo \
-  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Install required packages
+if sudo apt-get install ca-certificates curl -y; then
+    echo "Successfully installed ca-certificates and curl"
+else
+    echo "Failed to install ca-certificates and curl, exiting script" >&2
+    exit 1
+fi
 
-# Install Docker Engine
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+# Create the directory for Docker's GPG key
+if sudo install -m 0755 -d /etc/apt/keyrings; then
+    echo "Successfully created /etc/apt/keyrings directory"
+else
+    echo "Failed to create /etc/apt/keyrings directory, exiting script" >&2
+    exit 1
+fi
 
-sudo systemctl start docker
-sudo systemctl enable docker
-sudo docker version
+# Download Docker's official GPG key
+if sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc; then
+    echo "Successfully downloaded Docker's GPG key"
+else
+    echo "Failed to download Docker's GPG key, exiting script" >&2
+    exit 1
+fi
 
-echo '\nDocker version should be shown above.\n'
+# Set the correct permissions for the GPG key
+if sudo chmod a+r /etc/apt/keyrings/docker.asc; then
+    echo "Successfully set permissions for Docker's GPG key"
+else
+    echo "Failed to set permissions for Docker's GPG key, exiting script" >&2
+    exit 1
+fi
 
-# 1、添加源
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-# 2、安装并重启
-sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-sudo systemctl restart docker
-# 3、测试
-sudo docker run --rm --gpus all nvidia/cuda:10.0-base nvidia-smi
+# Add the Docker repository to Apt sources
+if echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null; then
+    echo "Successfully added Docker repository to Apt sources"
+else
+    echo "Failed to add Docker repository to Apt sources, exiting script" >&2
+    exit 1
+fi
 
-echo '\nNvidia-smi should be shown above.\n'
+# Update package lists
+if sudo apt-get update; then
+    echo "Successfully updated package lists"
+else
+    echo "Failed to update package lists, exiting script" >&2
+    exit 1
+fi
+
+# Install Docker components
+if sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y; then
+    echo "Successfully installed Docker components"
+else
+    echo "Failed to install Docker components, exiting script" >&2
+    exit 1
+fi
+
+# Run the hello-world Docker container to verify the installation
+if sudo docker run hello-world; then
+    echo "Docker installation verified successfully"
+else
+    echo "Failed to verify Docker installation, exiting script" >&2
+    exit 1
+fi
+
+echo "Docker installation completed successfully"

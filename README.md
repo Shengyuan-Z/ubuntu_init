@@ -1,53 +1,103 @@
-# Basic components
+# Intro
 
-## 1. Replacing apt resources with Tsinghua's
-```sudo bash apt-sources.sh```
+This is a branch for any new installed ubuntu 22.04, contains one-key scripts basic tools and configurations.
 
-## 2. Installing basic things (Maybe 30-min long. XD)
-```sudo bash apt-install.sh```
-
-## 3. Installing nvidia driver
-```sudo bash nvidia_driver.sh```
-
-
-**Rebooting** is needed after this step. 
-
-Afterwards, you can use `nvidia-smi` to display your driver informations.
-## 4. Installing cuda and cudnn
-You should download `cudnn-local-repo-ubuntu2004-8.4.0.27_1.0-1_amd64.deb` on [nvidia-cudnn](https://developer.nvidia.com/rdp/cudnn-download) and put it in this git directory first. Login may be needed. 
-
-Then
-
-```sudo bash cuda_cudnn.sh```
-
-You will see `Result = PASS` and `Test passed!` respectively for the sucesses of `cuda` and `cudnn`.
-
-
-BTW, the details is recorded on [my article](https://segmentfault.com/a/1190000041788291).
-
-## 5. Installing docker and nvidia-docker
-sudo bash docker_install.sh
-
-## 6. (optional) Installing softwares
-sudo bash software.sh
-
-
-# Adding docker container for others
-
+# apt 换源
 ```bash
-sudo bash docker_deployment.sh
+sudo sh apt_mirror_change.sh
 ```
 
-Then, you need to input the name of the container, at least one GPU, size and port attached to it.
-
-E.g.
-
+Terminal should say:
 ```bash
-user@machine:~$ sudo bash docker_deployment.sh
-host name: t5
-gpu option: (0, 1, 2) 0,1
-size(unit:GB) : 64
-port: 10005
+Successfully updated package lists
 ```
 
- 
+References
+- [Tsinghua mirror](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
+
+# Basic tools
+```bash
+sudo sh basic_tools_install.sh
+```
+
+# Shell: Oh My Zsh
+```bash
+# ATTENTION! `sudo` is OMITTED!!
+sh ezsh.sh 
+# Finally sudo password is needed
+
+# Restart to take effect
+sudo reboot
+```
+
+# conda: miniconda
+```bash
+sudo sh miniconda_install.sh
+```
+
+# Docker service
+```bash
+sudo sh docker_install.sh
+```
+
+Terminal should say:
+
+```bash
+...
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+...
+```
+
+References:
+- [Docker install](https://docs.docker.com/engine/install/ubuntu/)
+
+# [Optional] Docker mirror change for Chinese mainland
+```
+sudo sh docker_mirror_change.sh
+```
+
+Terminal should say like:
+```bash
+1.88.1
+e170252f762678dec6ca2cc69aba1570769a5d39
+x64
+```
+
+References:
+- [docker更换镜像源](https://www.jianshu.com/p/b4a6239712bf)
+
+# Docker GPU Support
+```bash
+sudo sh docker_gpu_support.sh
+```
+
+Terminal should say:
+what `nvidia-smi` shows info of GPU
+
+
+References:
+- [Runtime options with Memory, CPUs, and GPUs](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu)
+- [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+
+# BEST universal code editor: VSCode
+```
+sudo sh vscode_install.sh
+```
+
+Terminal should say like:
+```
+1.88.1
+e170252f762678dec6ca2cc69aba1570769a5d39
+x64
+```
+
+References:
+- [VSCode setup](https://code.visualstudio.com/docs/setup/linux)
+
+
+# [Optional] Other tools
+
+```bash
+sudo sh other_tools_install.sh
+```
