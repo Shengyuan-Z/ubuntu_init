@@ -43,11 +43,18 @@ else
 fi
 
 # Enable zsh-autosuggestions in the ezsh configuration file
-if sed -i 's/# zsh-autosuggestions/zsh-autosuggestions/' ~/.config/ezsh/ezshrc.zsh; then
+if sed -i 's/# zsh-autosuggestions/zsh-autosuggestions/' ~/.config/ezsh/ezshrc.zsh && source ~/.config/ezsh/ezshrc.zsh; then
     echo "Successfully enabled zsh-autosuggestions in the ezsh configuration file"
+    # reload conf
+    if source ~/.config/ezsh/ezshrc.zsh > /dev/null 2>&1; then
+        echo "Configuration reloaded successfully"
+    else
+        echo "Warning: Failed to reload configuration. Please restart your shell" >&2
+    fi
 else
     echo "Failed to enable zsh-autosuggestions in the ezsh configuration file, exiting script" >&2
     exit 1
 fi
+
 
 echo "ezsh installation and configuration completed successfully"
