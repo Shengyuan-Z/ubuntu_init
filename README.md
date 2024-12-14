@@ -49,7 +49,7 @@ p10k configure
 
 # conda: miniconda
 ```bash
-sudo sh miniconda_install.sh
+sh miniconda_install.sh
 ```
 
 # Docker service
@@ -86,7 +86,7 @@ References:
 
 # Docker GPU Support
 ```bash
-sudo sh docker_gpu_support.sh
+sudo sh nvidia_container_toolkit_install.sh
 ```
 
 Terminal should say:
