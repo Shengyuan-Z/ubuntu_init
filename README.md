@@ -42,6 +42,9 @@ sh ezsh.sh
 
 # Restart to take effect
 sudo reboot
+
+# configure your theme
+p10k configure 
 ```
 
 # conda: miniconda
